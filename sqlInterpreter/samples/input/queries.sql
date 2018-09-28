@@ -1,3 +1,4 @@
-select * from Boats;
-select * from ailors;
-select * from Reserves;
+select * from Reserves where Reserves.H > 103;
+select * from Reserves R where R.H >= 102;
+
+

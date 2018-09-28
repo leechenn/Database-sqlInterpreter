@@ -9,6 +9,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import operator.Operator;
 import operator.ScanOperator;
+import operator.SelectOperator;
 
 public class Handler {
 public static void init() {
@@ -29,14 +30,21 @@ public static void parseSql() {
             PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
             System.out.println("Select body is " + select.getSelectBody());
             try {
+            if(plainSelect.getWhere()!=null) {
+            	ScanOperator scanOperator = new ScanOperator(plainSelect);
+            	Operator operator = new SelectOperator(scanOperator,plainSelect);
+            	operator.dump(sqlCount);
+            }
+            else {
             Operator operator = new ScanOperator(plainSelect);
 //            System.out.println("already catch");
             operator.dump(sqlCount);
             }
-            catch(NullPointerException e) {
-            	System.out.println("Table not found");
             }
-            sqlCount = sqlCount + 1;
+//            catch(NullPointerException e) {
+//            	System.out.println("Table not found");
+//            }
+            finally{sqlCount = sqlCount + 1;}
         }
     } catch (Exception e) {
         System.err.println("Exception occurred during parsing");

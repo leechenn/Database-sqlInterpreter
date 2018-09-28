@@ -24,17 +24,19 @@ public class ScanOperator extends Operator{
 		String tableName = strs[0];
 		String aliasName = strs[strs.length-1];
 		this.file = new File(App.model.getDataStoredPath(tableName));
+		if(strs.length!=1) {
+		App.model.setAliaMap(strs);
+		App.model.setCurSchema(aliasName);
+		}
+		else {
+			App.model.iniCurSchema(tableName);
+		}
 		iniread();
 		
 		
 		
 		
-//		initReaderPointer();
-//
-//		Catalog.getInstance().setAliases(item);
-//		Catalog.getInstance().updateCurrentSchema(aliasName);
-//
-//		this.schema = Catalog.getInstance().getCurrentSchema();
+
 	}
 
 	@Override

@@ -28,6 +28,9 @@ public class Tuple {
 
         return Arrays.equals(data, tuple.data);
     }
+    public int[] getData() {
+    	return this.data;
+    }
 
 
     @Override

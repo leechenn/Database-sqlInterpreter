@@ -30,6 +30,7 @@ public class ParserExample {
 				String[] strs = item.split("\\s+");
 				System.out.println("tableArray: "+Arrays.toString(strs));
 				System.out.println("fromItem: "+ps.getFromItem());
+				System.out.println("whereItem: "+ps.getWhere());
 				try {
 				System.out.println("join---"+ps.getJoins());}
 				catch(NullPointerException e) {

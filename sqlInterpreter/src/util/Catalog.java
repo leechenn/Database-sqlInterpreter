@@ -21,7 +21,9 @@ public class Catalog {
 	private String dataSchemaFile;
 	private String dataDir;
 	private String sqlPath;
+	private Map<String,String> aliaMap = new HashMap<String,String>();
 	private Map<String,String> dataStore = new HashMap<String,String>();
+	private Map<String,Integer> currentSchema = new HashMap<String,Integer>();
 	//table and its fields
 	private Map<String,Map<String,Integer>> schemas = new HashMap<String,Map<String,Integer>>();
 
@@ -40,7 +42,7 @@ public class Catalog {
 			String s = null;
 			while((s = br.readLine())!=null) {
 				String[] table = s.split("\\s+");
-//			table stored map
+				//			table stored map
 				dataStore.put(table[0],dataDir+"/"+table[0]);
 				Map<String,Integer> schema = new HashMap<String,Integer>();
 				for(int i = 1;i<table.length;i++) {
@@ -60,7 +62,7 @@ public class Catalog {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	//    singleton instance
@@ -69,6 +71,27 @@ public class Catalog {
 			instance = new Catalog(inputPath,outputPath);
 		}
 		return instance;
+	}
+
+	public void setAliaMap(String[] aliaStr) {
+		//		key is alias name
+		this.aliaMap.put(aliaStr[2], aliaStr[0]);
+	}
+
+	public void setCurSchema(String alias) {
+		Map<String, Integer> tempSchema = schemas.get(aliaMap.get(alias));
+		currentSchema = new HashMap<>();
+		for (Map.Entry<String, Integer> entry : tempSchema.entrySet()) {
+			String newKey = alias + "." + entry.getKey().split("\\.")[1];
+			currentSchema.put(newKey, entry.getValue());
+		}
+	}
+	public void iniCurSchema(String tableName) {
+		this.currentSchema = schemas.get(tableName);
+	}
+	
+	public Map<String, Integer> getCurSchema(){
+		return this.currentSchema;
 	}
 
 	public String getInputPath() {
@@ -86,20 +109,20 @@ public class Catalog {
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
 	}
-	
+
 	public String getDataStoredPath(String table) {
 		return dataStore.get(table);
 	}
-	
-	 public Map<String, Integer> getTableSchema(String table) {
-	        return schemas.get(table);
-	    } 
-	 public String getSqlPath() {
-		 return this.sqlPath;
-	 }
-//	public void setConstant() {
-//		
-//	}
+
+	public Map<String, Integer> getTableSchema(String table) {
+		return schemas.get(table);
+	} 
+	public String getSqlPath() {
+		return this.sqlPath;
+	}
+	//	public void setConstant() {
+	//		
+	//	}
 	public static void main(String[] args) {
 		Catalog catalog = Catalog.getInstance("samples/input","samples/output");
 		System.out.println(catalog);
