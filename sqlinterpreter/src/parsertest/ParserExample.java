@@ -28,6 +28,7 @@ public class ParserExample {
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
 				String item = ps.getFromItem().toString();
 				String[] strs = item.split("\\s+");
+				System.out.println("projection---"+ps.getSelectItems());
 				System.out.println("tableArray: "+Arrays.toString(strs));
 				System.out.println("fromItem: "+ps.getFromItem());
 				System.out.println("whereItem: "+ps.getWhere());

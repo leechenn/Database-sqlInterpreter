@@ -8,6 +8,7 @@ import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import operator.Operator;
+import operator.ProjectOperator;
 import operator.ScanOperator;
 import operator.SelectOperator;
 
@@ -32,13 +33,15 @@ public static void parseSql() {
             try {
             if(plainSelect.getWhere()!=null) {
             	ScanOperator scanOperator = new ScanOperator(plainSelect);
-            	Operator operator = new SelectOperator(scanOperator,plainSelect);
-            	operator.dump(sqlCount);
+            	SelectOperator selectOperator = new SelectOperator(scanOperator,plainSelect);
+            	ProjectOperator projectOperator = new ProjectOperator(selectOperator,plainSelect);
+            	projectOperator.dump(sqlCount);
             }
             else {
             Operator operator = new ScanOperator(plainSelect);
+            ProjectOperator projectOperator = new ProjectOperator(operator,plainSelect);
 //            System.out.println("already catch");
-            operator.dump(sqlCount);
+            projectOperator.dump(sqlCount);
             }
             }
 //            catch(NullPointerException e) {

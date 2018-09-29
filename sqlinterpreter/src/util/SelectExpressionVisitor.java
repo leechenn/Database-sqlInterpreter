@@ -38,6 +38,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	    @Override
 	    public void visit(AndExpression andExpression) {
 	        // Todo
+	    	System.out.println(andExpression.toString());
 	        andExpression.getLeftExpression().accept(this);
 	        andExpression.getRightExpression().accept(this);
 	        boolean rightValue = values.removeFirst();
@@ -48,6 +49,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	    @Override
 	    public void visit(Column column) {
 	        // Todo
+	    	System.out.println("expression:-------"+column.toString());
 	        String columnName = column.getWholeColumnName();
 	        System.out.println("column name is:"+columnName);
 	        // int ind = catalog.getIndexOfColumn(columnName);
@@ -85,6 +87,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	    @Override
 	    public void visit(GreaterThan greaterThan) {
 	        // Todo
+	    	System.out.println("expression:------"+greaterThan.toString());
 	        greaterThan.getLeftExpression().accept(this);
 	        greaterThan.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
