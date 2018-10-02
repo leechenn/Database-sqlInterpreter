@@ -2,7 +2,6 @@ package handler;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.List;
 
 import net.sf.jsqlparser.expression.Expression;
@@ -10,11 +9,13 @@ import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
+import operator.DuplicateEliminationOperator;
 import operator.JoinOperator;
 import operator.Operator;
 import operator.ProjectOperator;
 import operator.ScanOperator;
 import operator.SelectOperator;
+import operator.SortOperator;
 import util.JoinExtract;
 
 public class Handler {
@@ -40,7 +41,15 @@ public static void parseSql() {
             	Expression expression = plainSelect.getWhere();
             	SelectOperator selectOperator = new SelectOperator(scanOperator,plainSelect,expression);
             	ProjectOperator projectOperator = new ProjectOperator(selectOperator,plainSelect);
-            	projectOperator.dump(sqlCount);
+            	Operator operator = null;
+            	 if(plainSelect.getDistinct() != null){
+                     operator = new SortOperator(projectOperator, plainSelect);
+                     operator = new DuplicateEliminationOperator(operator);
+                 }
+                 else {
+                 	operator = new SortOperator(projectOperator, plainSelect);
+                 }
+            	 operator.dump(sqlCount);
             }
 
             Operator leftOp;
@@ -120,7 +129,15 @@ public static void parseSql() {
                     
                 }
                 ProjectOperator projectOperator = new ProjectOperator(leftOp,plainSelect);
-                projectOperator.dump(sqlCount);
+                Operator operator = null;
+                if(plainSelect.getDistinct() != null){
+                    operator = new SortOperator(projectOperator, plainSelect);
+                    operator = new DuplicateEliminationOperator(operator);
+                }
+                else {
+                	operator = new SortOperator(projectOperator, plainSelect);
+                }
+                operator.dump(sqlCount);
                 
             	
             }

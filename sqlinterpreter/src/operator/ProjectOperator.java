@@ -14,17 +14,30 @@ public class ProjectOperator extends Operator {
 Operator childOp;
 List<String> selectItemsList = new ArrayList<String>();
 List<Integer> tupleIndexList = new ArrayList<Integer>();
+Map<String, Integer> schema;
+int tupleLen;
 public ProjectOperator (Operator operator, PlainSelect plainSelect) {
 	childOp = operator;//childOp could be ScanOperator or SelectOperator
 	List<SelectItem> itemList = plainSelect.getSelectItems();
+	this.schema =  operator.getSchema();
 	Map<String, Integer> schema = operator.getSchema();
 	if(itemList.get(0).toString()!="*") {
+		tupleLen = itemList.size();
 	for(SelectItem selectItem:itemList) {
 		selectItemsList.add(selectItem.toString());
 		int index = schema.get(selectItem.toString());
 		tupleIndexList.add(index);
 	}
 	}
+	else {
+		tupleLen = schema.size();
+	}
+}
+public Map<String, Integer> getSchema() {
+	return this.schema;
+}
+public int getTupleLen() {
+	return this.tupleLen;
 }
 @Override
 public Tuple getNextTuple() {
