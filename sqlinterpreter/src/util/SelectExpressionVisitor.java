@@ -44,6 +44,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        boolean rightValue = values.removeFirst();
 	        boolean leftValue = values.removeFirst();
 	        values.addFirst(leftValue && rightValue);
+	        
 	    }
 
 	    @Override

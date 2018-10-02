@@ -17,7 +17,7 @@ List<Integer> tupleIndexList = new ArrayList<Integer>();
 public ProjectOperator (Operator operator, PlainSelect plainSelect) {
 	childOp = operator;//childOp could be ScanOperator or SelectOperator
 	List<SelectItem> itemList = plainSelect.getSelectItems();
-	Map<String, Integer> schema = App.model.getCurSchema();
+	Map<String, Integer> schema = operator.getSchema();
 	if(itemList.get(0).toString()!="*") {
 	for(SelectItem selectItem:itemList) {
 		selectItemsList.add(selectItem.toString());

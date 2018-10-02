@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Map;
 
 import entity.Tuple;
 import handler.App;
@@ -15,6 +16,7 @@ public class ScanOperator extends Operator{
 	//	private String TableScanned;
 	private File file;
 	private BufferedReader br = null;
+	private Map<String, Integer> curSchema;
 
 
 	public ScanOperator(PlainSelect plainSelect) {
@@ -32,11 +34,25 @@ public class ScanOperator extends Operator{
 			App.model.iniCurSchema(tableName);
 		}
 		iniread();
+		curSchema = App.model.getCurSchema();
+	}
+	public ScanOperator(PlainSelect plainSelect,int joinedTableIndex) {
+		String tableScanned = null;
+		tableScanned = plainSelect.getJoins().get(joinedTableIndex).toString();
+		String[] strs = tableScanned.split("\\s+");//if there is aliases
+		String tableName = strs[0];
+		String aliasName = strs[strs.length-1];
+		this.file = new File(App.model.getDataStoredPath(tableName));
+		if(strs.length!=1) {
+		App.model.setAliaMap(strs);
+		App.model.setCurSchema(aliasName);
+		}
+		else {
+			App.model.iniCurSchema(tableName);
+		}
+		iniread();
+		curSchema = App.model.getCurSchema();
 		
-		
-		
-		
-
 	}
 
 	@Override
@@ -64,6 +80,10 @@ public class ScanOperator extends Operator{
 //	@Override
 //	public void dump() {	
 //	}
+	public Map<String,Integer> getSchema() {
+		System.out.println("scan operator schema");
+		return this.curSchema;
+	}
 	public void iniread() {
 		try {
 			Reader read = new FileReader(this.file);

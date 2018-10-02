@@ -1,14 +1,18 @@
 package util;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import handler.App;
+import net.sf.jsqlparser.expression.Expression;
 
 public class Catalog {
 	//	public static final String DATA_PATH = "samples/input/db/data/";
@@ -26,6 +30,11 @@ public class Catalog {
 	private Map<String,Integer> currentSchema = new HashMap<String,Integer>();
 	//table and its fields
 	private Map<String,Map<String,Integer>> schemas = new HashMap<String,Map<String,Integer>>();
+	private List<String> allTableList;
+	private List<Expression>[] singTableExp;
+	private List<Expression>[] JoinedTableCondition;
+	private List<Expression> allExp;
+	private List<String> joinedTableList;
 
 	private Catalog(String inputPath,String outputPath) {
 		setInputPath(inputPath);
@@ -71,6 +80,36 @@ public class Catalog {
 			instance = new Catalog(inputPath,outputPath);
 		}
 		return instance;
+	}
+	public void iniAllTableList() {
+		allTableList = new ArrayList<String>();
+	}
+	public void iniJoinedTableList() {
+		joinedTableList = new ArrayList<String>();
+	}
+	public List<String> getJoinedTableList(){
+		return this.joinedTableList;
+	}
+	public List<Expression>[] getsingleTableExp() {
+		return this.singTableExp;
+	}
+	public List<Expression>[] getJoinedTableExp() {
+		return this.JoinedTableCondition;
+	}
+	public void iniSingleTableExp(int size) {
+		this.singTableExp = new ArrayList[size];
+	}
+	public void iniJoinedTableExp(int size) {
+		this.JoinedTableCondition = new ArrayList[size];
+	}
+	public void iniAllExp() {
+		this.allExp = new ArrayList<Expression>();
+	}
+	public List<Expression> getAllExp() {
+		return this.allExp;
+	}
+	public List<String> getAllTableList() {
+		return this.allTableList;
 	}
 
 	public void setAliaMap(String[] aliaStr) {
