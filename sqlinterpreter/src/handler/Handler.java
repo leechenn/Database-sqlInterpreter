@@ -25,7 +25,6 @@ public class Handler {
 	
 public static void init() {
 //	get output path from Catalog and build a directory
-	
 	String outputPath = App.model.getOutputPath();
 	new File(outputPath).mkdirs();
 }

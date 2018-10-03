@@ -11,30 +11,36 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ * SelectExpressionVisitor for filting tuple according to expression
+ */
+/**
+ * @author chen
+ *
+ */
 public class SelectExpressionVisitor implements ExpressionVisitor {
 	
 	    private Map<String, Integer> currentSchema;
 	    private Deque<Long> data;
-	    private Deque<Boolean> values;
 	    private Tuple currentTuple;
+	    private boolean result = true;
 
 
 	    public SelectExpressionVisitor(Tuple tuple, Map<String, Integer> schema) {
 	    	
 	        currentSchema = schema;
 	        data = new LinkedList<>();
-	        values = new LinkedList<>();
 	        currentTuple = tuple;
+	        
 	    }
 
 	    /**
 	     * @return result of the expression
 	     */
 	    public boolean getResult() {
-	        if (values.isEmpty()) {
-	            return true;
-	        }
-	        return values.peekFirst();
+	        
+	        return this.result;
 	    }
 
 	    @Override
@@ -42,9 +48,6 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	     
 	        andExpression.getLeftExpression().accept(this);
 	        andExpression.getRightExpression().accept(this);
-	        boolean rightValue = values.removeFirst();
-	        boolean leftValue = values.removeFirst();
-	        values.addFirst(leftValue && rightValue);
 	        
 	    }
 
@@ -69,7 +72,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        equalsTo.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue == rightValue);
+	        this.result = result&&(leftValue == rightValue);
+	      
 	    }
 
 	    @Override
@@ -79,7 +83,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        notEqualsTo.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue != rightValue);
+	        this.result = result&&(leftValue != rightValue);
+	       
 	    }
 
 	    @Override
@@ -89,7 +94,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        greaterThan.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue > rightValue);
+	        this.result = result&&(leftValue > rightValue);
+	       
 	    }
 
 	    @Override
@@ -99,7 +105,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        greaterThanEquals.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue >= rightValue);
+	        this.result = result&&(leftValue >= rightValue);
+	       
 
 	    }
 
@@ -110,7 +117,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        minorThan.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue < rightValue);
+	        this.result = result&&(leftValue < rightValue);
+	       
 	    }
 
 	    @Override
@@ -120,7 +128,8 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 	        minorThanEquals.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
 	        long leftValue = data.removeFirst();
-	        values.addFirst(leftValue <= rightValue);
+	        this.result = result&&(leftValue <= rightValue);
+	      
 	    }
 
 		@Override

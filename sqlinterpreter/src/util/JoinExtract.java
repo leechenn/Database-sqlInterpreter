@@ -28,6 +28,7 @@ public class JoinExtract implements ExpressionVisitor {
 //	  if left expression and right expression are both LongValue,add the expression to first table
 //	  if left expression and right expression are both Column, this expression could be join condition if column names are different
 //	  if one side is Column, another side is LongValue, it should be expression for one table
+	    
 	    @Override
 	    public void visit(EqualsTo equalsTo) {
 	    	List<Expression> expList = App.model.getAllExp();
