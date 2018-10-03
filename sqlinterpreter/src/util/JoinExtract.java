@@ -1,100 +1,33 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
-import entity.Tuple;
 import handler.App;
-import net.sf.jsqlparser.expression.AllComparisonExpression;
-import net.sf.jsqlparser.expression.AnyComparisonExpression;
-import net.sf.jsqlparser.expression.CaseExpression;
-import net.sf.jsqlparser.expression.DateValue;
-import net.sf.jsqlparser.expression.DoubleValue;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.ExpressionVisitor;
-import net.sf.jsqlparser.expression.Function;
-import net.sf.jsqlparser.expression.InverseExpression;
-import net.sf.jsqlparser.expression.JdbcParameter;
-import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.NullValue;
-import net.sf.jsqlparser.expression.Parenthesis;
-import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.TimeValue;
-import net.sf.jsqlparser.expression.TimestampValue;
-import net.sf.jsqlparser.expression.WhenClause;
-import net.sf.jsqlparser.expression.operators.arithmetic.Addition;
-import net.sf.jsqlparser.expression.operators.arithmetic.BitwiseAnd;
-import net.sf.jsqlparser.expression.operators.arithmetic.BitwiseOr;
-import net.sf.jsqlparser.expression.operators.arithmetic.BitwiseXor;
-import net.sf.jsqlparser.expression.operators.arithmetic.Concat;
-import net.sf.jsqlparser.expression.operators.arithmetic.Division;
-import net.sf.jsqlparser.expression.operators.arithmetic.Multiplication;
-import net.sf.jsqlparser.expression.operators.arithmetic.Subtraction;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
-import net.sf.jsqlparser.expression.operators.relational.Between;
-import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
-import net.sf.jsqlparser.expression.operators.relational.ExistsExpression;
-import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
-import net.sf.jsqlparser.expression.operators.relational.GreaterThanEquals;
-import net.sf.jsqlparser.expression.operators.relational.InExpression;
-import net.sf.jsqlparser.expression.operators.relational.IsNullExpression;
-import net.sf.jsqlparser.expression.operators.relational.LikeExpression;
-import net.sf.jsqlparser.expression.operators.relational.Matches;
-import net.sf.jsqlparser.expression.operators.relational.MinorThan;
-import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
-import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
+
+import java.util.ArrayList;
+import java.util.List;
+import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.operators.arithmetic.*;
+import net.sf.jsqlparser.expression.operators.conditional.*;
+import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class JoinExtract implements ExpressionVisitor {
-	    private Map<String, Integer> currentSchema;
-	    private Deque<Long> data;
-	    private Deque<Boolean> values;
-	    private Tuple currentTuple;
-//	    private List<Expression> andExpressionList = new ArrayList<Expression>();
-
-	    public JoinExtract() {
-//	        currentSchema = schema;
-//	        data = new LinkedList<>();
-//	        values = new LinkedList<>();
-//	        currentTuple = tuple;
-	       
-	    }
-//
-//	    /**
-//	     * @return result of the expression
-//	     */
-//	    public boolean getResult() {
-//	        if (values.isEmpty()) {
-//	            return true;
-//	        }
-//	        return values.peekFirst();
-//	    }
-
+	
 	    @Override
 	    public void visit(AndExpression andExpression) {
-	        // Todo
-	    	System.out.println(andExpression.toString());
-//	    	andExpressionList.add(andExpression);
+//	  do a recursive method for dealing with expression node
 	        andExpression.getLeftExpression().accept(this);
 	        andExpression.getRightExpression().accept(this);
 	    }
 
-	    @Override
-	    public void visit(Column column) {
-	     
-	        
-	    }
-
-	    @Override
-	    public void visit(LongValue longValue) {
-	       
-	    }
-
+//	  if left expression and right expression are both LongValue,add the expression to first table
+//	  if left expression and right expression are both Column, this expression could be join condition if column names are different
+//	  if one side is Column, another side is LongValue, it should be expression for one table
 	    @Override
 	    public void visit(EqualsTo equalsTo) {
 	    	List<Expression> expList = App.model.getAllExp();
@@ -745,6 +678,17 @@ public class JoinExtract implements ExpressionVisitor {
 	    		
 	    	}
 	    }
+	    @Override
+	    public void visit(Column column) {
+	     
+	        
+	    }
+
+	    @Override
+	    public void visit(LongValue longValue) {
+	       
+	    }
+
 
 		@Override
 		public void visit(NullValue nullValue) {

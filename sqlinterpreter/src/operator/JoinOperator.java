@@ -9,7 +9,12 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import util.SelectExpressionVisitor;
 
+/**
+ * JoinOperator class for operating joined tables
+ * @author Chen Li, QinXuan Pian
+ */
 public class JoinOperator extends Operator {
+	
 	private Operator leftOp;
 	private Operator rightOp;
 	private PlainSelect plainSelect;
@@ -17,20 +22,28 @@ public class JoinOperator extends Operator {
 	private Tuple outerTuple;
 	private Tuple innerTuple;
 	private Expression joinedCondition;
+	
+	
+	/**
+	 * JoinOperator constructor, joinedCondition is the condition expression for two tables
+	 * @param opLeft
+	 * @param opRight
+	 * @param plainSelect
+	 * @param joinedCondition
+	 */
 	public JoinOperator(Operator opLeft, Operator opRight, PlainSelect plainSelect,Expression joinedCondition){
+		
         this.leftOp = opLeft;
         this.rightOp = opRight;
         this.plainSelect = plainSelect;
         this.schema = new HashMap<>();
         schema.putAll(opLeft.getSchema());
         this.joinedCondition = joinedCondition;
-       
-        
+//       update schema
         for (Map.Entry<String, Integer> entry : opRight.getSchema().entrySet()) {
             schema.put(entry.getKey(), entry.getValue() + opLeft.getSchema().size());
         }
-      
-       
+         
         outerTuple = null;
         innerTuple = null;
     }
@@ -40,7 +53,7 @@ public class JoinOperator extends Operator {
      */
     @Override
     public Tuple getNextTuple(){
-        // update outer tuple and inner tuple
+        
         if(outerTuple == null && innerTuple == null){
             outerTuple = leftOp.getNextTuple();
             innerTuple = rightOp.getNextTuple();
@@ -59,20 +72,25 @@ public class JoinOperator extends Operator {
 
         // Concentrate Tuple
         long[] newTupleData = new long[outerTuple.getData().length + innerTuple.getData().length];
+        
         for(int i = 0; i < outerTuple.getData().length; i++){
             newTupleData[i] = outerTuple.getData()[i];
         }
+        
         for(int i = 0; i < innerTuple.getData().length; i++){
             newTupleData[i + outerTuple.getData().length] = innerTuple.getData()[i];
         }
         String dataString = Arrays.toString(newTupleData).replaceAll(" ", "");
 		int len = dataString.length();
         Tuple tuple = new Tuple(dataString.substring(1, len-1));
+        
+//        if expression is null, it is cross product
         if(this.joinedCondition==null) {
         	return tuple;
         }
+        //if expression, accpect selectExpressionVisitor to deal to expression
         while (tuple != null) {
-			System.out.println("schema:----:"+this.getSchema());
+        	
             SelectExpressionVisitor sv = new SelectExpressionVisitor(tuple, this.getSchema());
             joinedCondition.accept(sv);
             if (sv.getResult()) {
@@ -82,6 +100,7 @@ public class JoinOperator extends Operator {
         }
         return tuple;
     }
+    
     public Map<String,Integer> getSchema(){
 		return this.schema;
 	};
@@ -91,6 +110,7 @@ public class JoinOperator extends Operator {
      */
     @Override
     public void reset(){
+    	
         leftOp.reset();
         rightOp.reset();
     }

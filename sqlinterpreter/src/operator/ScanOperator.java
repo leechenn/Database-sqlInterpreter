@@ -12,23 +12,31 @@ import entity.Tuple;
 import handler.App;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
+
+/**
+ * ScanOperator class 
+ * @author Chen Li, QinXuan Pian
+ */
+
 public class ScanOperator extends Operator{
-	//	private String TableScanned;
+	
 	private File file;
 	private BufferedReader br = null;
 	private Map<String, Integer> curSchema;
 
-
+	/**
+	 * ScanOperator constructor for SQL without joined tables
+	 */
 	public ScanOperator(PlainSelect plainSelect) {
 		String tableScanned = null;
-		tableScanned = plainSelect.getFromItem().toString();
+		tableScanned = plainSelect.getFromItem().toString();// first table in from item
 		String[] strs = tableScanned.split("\\s+");//if there is aliases
 		String tableName = strs[0];
 		String aliasName = strs[strs.length-1];
 		this.file = new File(App.model.getDataStoredPath(tableName));
 		if(strs.length!=1) {
 		App.model.setAliaMap(strs);
-		App.model.setCurSchema(aliasName);
+		App.model.setCurSchema(aliasName);  
 		}
 		else {
 			App.model.iniCurSchema(tableName);
@@ -36,6 +44,9 @@ public class ScanOperator extends Operator{
 		iniread();
 		curSchema = App.model.getCurSchema();
 	}
+	/**
+	 * ScanOperator constructor for SQL joined tables
+	 */
 	public ScanOperator(PlainSelect plainSelect,int joinedTableIndex) {
 		String tableScanned = null;
 		tableScanned = plainSelect.getJoins().get(joinedTableIndex).toString();
@@ -63,6 +74,9 @@ public class ScanOperator extends Operator{
 			if(str!=null) {
 				tuple = new Tuple(str);
 			}
+			else {
+				br.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,11 +91,9 @@ public class ScanOperator extends Operator{
 		iniread();
 	}
 
-//	@Override
-//	public void dump() {	
-//	}
+
 	public Map<String,Integer> getSchema() {
-		System.out.println("scan operator schema");
+		
 		return this.curSchema;
 	}
 	public void iniread() {
@@ -95,5 +107,6 @@ public class ScanOperator extends Operator{
 		
 		
 	}
+	
 
 }

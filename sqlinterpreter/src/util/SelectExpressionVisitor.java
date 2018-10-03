@@ -3,7 +3,6 @@ package util;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-
 import entity.Tuple;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
@@ -13,12 +12,15 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
 public class SelectExpressionVisitor implements ExpressionVisitor {
+	
 	    private Map<String, Integer> currentSchema;
 	    private Deque<Long> data;
 	    private Deque<Boolean> values;
 	    private Tuple currentTuple;
 
+
 	    public SelectExpressionVisitor(Tuple tuple, Map<String, Integer> schema) {
+	    	
 	        currentSchema = schema;
 	        data = new LinkedList<>();
 	        values = new LinkedList<>();
@@ -37,8 +39,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(AndExpression andExpression) {
-	        // Todo
-	    	System.out.println(andExpression.toString());
+	     
 	        andExpression.getLeftExpression().accept(this);
 	        andExpression.getRightExpression().accept(this);
 	        boolean rightValue = values.removeFirst();
@@ -49,25 +50,21 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(Column column) {
-	        // Todo
-	    	System.out.println("expression:-------"+column.toString());
+	    	
 	        String columnName = column.getWholeColumnName();
-	        System.out.println("column name is:"+columnName);
-	        // int ind = catalog.getIndexOfColumn(columnName);
 	        int ind = currentSchema.get(columnName);
 	        data.push((long)currentTuple.getData()[ind]);
-	        System.out.println(data);
+	        
 	    }
 
 	    @Override
 	    public void visit(LongValue longValue) {
-	        // Todo
 	        data.push(longValue.getValue());
 	    }
 
 	    @Override
 	    public void visit(EqualsTo equalsTo) {
-	        // Todo
+	    	
 	        equalsTo.getLeftExpression().accept(this);
 	        equalsTo.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
@@ -77,7 +74,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(NotEqualsTo notEqualsTo) {
-	        // Todo
+	
 	        notEqualsTo.getLeftExpression().accept(this);
 	        notEqualsTo.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
@@ -87,8 +84,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(GreaterThan greaterThan) {
-	        // Todo
-	    	System.out.println("expression:------"+greaterThan.toString());
+	    	
 	        greaterThan.getLeftExpression().accept(this);
 	        greaterThan.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
@@ -98,7 +94,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(GreaterThanEquals greaterThanEquals) {
-	        // todo
+	     
 	        greaterThanEquals.getLeftExpression().accept(this);
 	        greaterThanEquals.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
@@ -109,7 +105,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(MinorThan minorThan) {
-	        // Todo
+	        
 	        minorThan.getLeftExpression().accept(this);
 	        minorThan.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();
@@ -119,7 +115,7 @@ public class SelectExpressionVisitor implements ExpressionVisitor {
 
 	    @Override
 	    public void visit(MinorThanEquals minorThanEquals) {
-	        // Todo
+	      
 	        minorThanEquals.getLeftExpression().accept(this);
 	        minorThanEquals.getRightExpression().accept(this);
 	        long rightValue = data.removeFirst();

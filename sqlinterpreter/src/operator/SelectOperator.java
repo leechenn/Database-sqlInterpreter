@@ -1,44 +1,40 @@
 package operator;
 
 import java.util.Map;
-
 import entity.Tuple;
-import handler.App;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-//import util.JoinExpressionVisitor;
 import util.SelectExpressionVisitor;
 
+/**
+ * SelectOperator class for selecting tuple according to getwhere() expression 
+ * @author Chen Li, QinXuan Pian
+ */
 public class SelectOperator extends Operator {
-private ScanOperator scanOperator;
-private Operator operator;
+	
+private ScanOperator operator;
 private Expression expression;
 private Map<String, Integer> curSchema;
 
-public SelectOperator(Operator operator, PlainSelect plainSelect,Expression expression) {
+public SelectOperator(ScanOperator operator, PlainSelect plainSelect, Expression expression) {
+	
 	this.operator = operator;
 	this.expression = expression;
-	curSchema = operator.getSchema();
-//	JoinExpressionVisitor joinExpress = new JoinExpressionVisitor(operator.getSchema());
-//    expression.accept(joinExpress);
-//    expression = joinExpress.getExpression();
-//	if(this.operator instanceof JoinOperator ) {
-//		System.out.println("join schema:-----"+operator.getSchema());
-//		joinExpress = new JoinExpressionVisitor(operator.getSchema());
-//        expression.accept(joinExpress);
-//        expression = joinExpress.getExpression();
-//        System.out.println("join expression------------"+expression.toString());
-//	}
+	curSchema = operator.getSchema();//get current schema 
+
 }
+
 @Override
 public Tuple getNextTuple() {
 	if(expression == null) {
-		return this.operator.getNextTuple();
+		return this.operator.getNextTuple();// if expression is null, each tuple will be selected 
 	}
+//	if expression is not null, the tuple will be selected according to select expression
 	else {
+		
 		 Tuple next = this.operator.getNextTuple();
 		 while (next != null) {
-			 System.out.println("schema:----:"+operator.getSchema());
+//			 SelectExpressionVisitor will be accepted here for selectexpression
              SelectExpressionVisitor sv = new SelectExpressionVisitor(next, operator.getSchema());
              expression.accept(sv);
              if (sv.getResult()) {

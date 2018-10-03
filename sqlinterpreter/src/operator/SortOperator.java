@@ -10,26 +10,37 @@ import entity.Tuple;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ * SortOperator for sorting tuple according to expression after order by
+ */
 public class SortOperator extends Operator {
+	
 	private List<Tuple> tupleList;
-	private final PlainSelect plainSelect;
+	private PlainSelect plainSelect;
 	private int currentIndex;
 	private Map<String, Integer> schema;
 
+	/**
+	 * SortOperator constructor
+	 * @param operator
+	 * @param plainSelect
+	 */
 	public SortOperator(Operator operator, PlainSelect plainSelect) {
+		
 		tupleList = new ArrayList<>();
 		this.plainSelect = plainSelect;
 		this.schema = operator.getSchema();
 		Tuple tuple = operator.getNextTuple();
-		System.out.println(this.schema);
+		
+//		add all tuple to list
 		while(tuple != null) {
 			tupleList.add(tuple);
 			tuple = operator.getNextTuple();
 		}
+		//override compare method for sorting tuple
         Collections.sort(tupleList, new Comparator<Tuple>(){
         	List<OrderByElement> order = plainSelect.getOrderByElements();
-
-        
 			@Override
 			public int compare(Tuple t1, Tuple t2) {
 				if (order != null) {
@@ -44,16 +55,15 @@ public class SortOperator extends Operator {
 						}
 					}
 				}
-
-
-			
+//				if child operator is not project operator, all columns should be in tuple
 				int len = operator.getSchema().size();
+//				if child operator is project operator, the number of columns could be different
 				if(operator instanceof ProjectOperator) {
 					len = ((ProjectOperator)operator).getTupleLen();
 				}
 				
 				for (int i = 0; i < len ; i++){
-					System.out.println(t1);
+					
 					if (t1.getData()[i] > t2.getData()[i]) {
 						return 1;
 					}
@@ -84,7 +94,6 @@ public class SortOperator extends Operator {
 	
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 		currentIndex = 0;
 	}
 

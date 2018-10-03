@@ -14,11 +14,13 @@ import java.util.Map;
 import handler.App;
 import net.sf.jsqlparser.expression.Expression;
 
+/**
+ * Catalog class for keeping tracking information of tables, the class will be created as a singleton
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class Catalog {
-	//	public static final String DATA_PATH = "samples/input/db/data/";
-	//    public static final String SCHEMA_PATH = "samples/input/db/schema.txt";
-	//    public static final String OUTPUT_PATH = "samples/output/";
-	//    public static final String SQLQURIES_PATH = "samples/input/queries.sql";
+
 	private static Catalog instance = null;
 	private String inputPath;
 	private String outputPath;
@@ -26,16 +28,20 @@ public class Catalog {
 	private String dataDir;
 	private String sqlPath;
 	private Map<String,String> aliaMap = new HashMap<String,String>();
-	private Map<String,String> dataStore = new HashMap<String,String>();
-	private Map<String,Integer> currentSchema = new HashMap<String,Integer>();
-	//table and its fields
+	private Map<String,String> dataStore = new HashMap<String,String>();//store information of data stored path
+	private Map<String,Integer> currentSchema = new HashMap<String,Integer>();//schema of current tuple
 	private Map<String,Map<String,Integer>> schemas = new HashMap<String,Map<String,Integer>>();
-	private List<String> allTableList;
-	private List<Expression>[] singTableExp;
-	private List<Expression>[] JoinedTableCondition;
-	private List<Expression> allExp;
-	private List<String> joinedTableList;
+	private List<String> allTableList;//all table names in SQL
+	private List<Expression>[] singTableExp;//selection list for single table
+	private List<Expression>[] JoinedTableCondition;//join condition for each join
+	private List<Expression> allExp;//all expression in get where expression
+	private List<String> joinedTableList;//list of joined tables
 
+	/**
+	 * Catalog constructor
+	 * @param inputPath
+	 * @param outputPath
+	 */
 	private Catalog(String inputPath,String outputPath) {
 		setInputPath(inputPath);
 		setOutputPath(outputPath);
@@ -51,7 +57,6 @@ public class Catalog {
 			String s = null;
 			while((s = br.readLine())!=null) {
 				String[] table = s.split("\\s+");
-				//			table stored map
 				dataStore.put(table[0],dataDir+"/"+table[0]);
 				Map<String,Integer> schema = new HashMap<String,Integer>();
 				for(int i = 1;i<table.length;i++) {
@@ -60,16 +65,10 @@ public class Catalog {
 				}
 				schemas.put(table[0], schema);
 			}
+			br.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			try {
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 	}
@@ -125,10 +124,11 @@ public class Catalog {
 			currentSchema.put(newKey, entry.getValue());
 		}
 	}
+	//if there is no alias,key is tableName.column,value is index
 	public void iniCurSchema(String tableName) {
 		this.currentSchema = schemas.get(tableName);
 	}
-	
+
 	public Map<String, Integer> getCurSchema(){
 		return this.currentSchema;
 	}
@@ -159,21 +159,6 @@ public class Catalog {
 	public String getSqlPath() {
 		return this.sqlPath;
 	}
-	//	public void setConstant() {
-	//		
-	//	}
-	public static void main(String[] args) {
-		Catalog catalog = Catalog.getInstance("samples/input","samples/output");
-		System.out.println(catalog);
-		Catalog catalog2 = Catalog.getInstance("samples/input","samples/output");
-		System.out.println(catalog2);
-		String[] argsArray = {"samples/input","samples/output"};
-		App.main(argsArray);
-		System.out.println(catalog);
-		System.out.println(catalog2);
-		System.out.println(catalog.getDataStoredPath("Sailors"));
-		System.out.println(catalog.schemas);
-		System.out.println(catalog.getSqlPath());
-		System.out.println(catalog.getOutputPath());
-	}
+	
+
 }
