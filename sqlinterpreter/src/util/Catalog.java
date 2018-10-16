@@ -16,7 +16,7 @@ import net.sf.jsqlparser.expression.Expression;
 
 /**
  * Catalog class for keeping tracking information of tables, the class will be created as a singleton
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  *
  */
 public class Catalog {

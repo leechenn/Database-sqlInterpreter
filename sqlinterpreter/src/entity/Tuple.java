@@ -19,6 +19,10 @@ public class Tuple {
 			data[i] = Integer.parseInt(sData[i]);
 		}
 	}
+	
+	public Tuple (int[] d) {
+		this.data = d;
+	}
 	/**
 	 * verify if two tuple are equal according to data in tuple
 	 */

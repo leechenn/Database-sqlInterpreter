@@ -3,7 +3,7 @@ package handler;
 import util.Catalog;
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  * Upper Class for input output path
  */
 public class App {

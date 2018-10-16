@@ -15,7 +15,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 /**
  * ScanOperator class 
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  */
 
 public class ScanOperator extends Operator{

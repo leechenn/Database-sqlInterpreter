@@ -11,7 +11,7 @@ import util.SelectExpressionVisitor;
 
 /**
  * JoinOperator class for operating joined tables
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  */
 public class JoinOperator extends Operator {
 	

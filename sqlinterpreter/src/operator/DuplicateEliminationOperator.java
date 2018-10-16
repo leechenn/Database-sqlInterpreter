@@ -7,7 +7,7 @@ import java.util.Map;
 import entity.Tuple;
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  *
  */
 public class DuplicateEliminationOperator extends Operator {

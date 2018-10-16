@@ -8,7 +8,7 @@ import util.SelectExpressionVisitor;
 
 /**
  * SelectOperator class for selecting tuple according to getwhere() expression 
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  */
 public class SelectOperator extends Operator {
 	

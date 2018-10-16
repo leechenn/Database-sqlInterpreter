@@ -18,7 +18,7 @@ import operator.SortOperator;
 import util.JoinExtract;
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  * Handler class for parsing SQL and put reault to output dir
  */
 public class Handler {

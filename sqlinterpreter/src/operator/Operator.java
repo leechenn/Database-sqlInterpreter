@@ -12,7 +12,7 @@ import handler.App;
 
 /**
  * Abstract class for different kinds of operator
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  */
 public abstract class Operator {
 

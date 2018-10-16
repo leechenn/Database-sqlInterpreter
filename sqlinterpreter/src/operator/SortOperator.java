@@ -11,7 +11,7 @@ import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  * SortOperator for sorting tuple according to expression after order by
  */
 public class SortOperator extends Operator {
