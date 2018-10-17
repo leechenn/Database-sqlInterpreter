@@ -1,14 +1,13 @@
-# Compiled class file
-*.class
-
 .DS_Store
 
 .path
 
 .project
 
-/bin
+.class
 
-/.settings
+bin/
 
-/.metadata
+.settings/
+
+.metadata/

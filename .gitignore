@@ -1,6 +1,4 @@
-/.metadata/
 .DS_Store
-*.class
 .project
 .classpath
-./recommenders
+.recommenders/
