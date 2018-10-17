@@ -11,3 +11,5 @@ bin/
 .settings/
 
 .metadata/
+
+src/.DS_Store
