@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import handler.App;
 import net.sf.jsqlparser.expression.Expression;
 
 /**

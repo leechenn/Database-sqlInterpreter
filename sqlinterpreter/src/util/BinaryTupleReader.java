@@ -16,7 +16,7 @@ public class BinaryTupleReader implements TupleReader{
 	private int count = 0; // num of tuples per page
 	
 	private String filepath;
-	private FileChannel fc;
+	public FileChannel fc;
 	private ByteBuffer zeros;
 	
 	public BinaryTupleReader(String fp) {
