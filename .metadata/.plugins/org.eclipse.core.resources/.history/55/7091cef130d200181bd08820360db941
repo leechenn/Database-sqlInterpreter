@@ -1,0 +1,26 @@
+package util;
+
+public class randomNum {
+	
+	private BinaryTupleWriter btw;
+	
+	private BinaryTupleReader btr;
+	
+	private String inputfilepath;
+	
+	private String outputfilepath;
+	
+	public randomNum(String ifp, String ofp) {
+		inputfilepath = ifp;
+		outputfilepath = ofp;
+		btw = new BinaryTupleWriter(outputfilepath);
+		btr = new BinaryTupleReader(inputfilepath);
+	}
+	
+	public void randomTuple (int count, int columnNum, int[]range) {
+		if (count < 0 || columnNum < 0 || range.length != 2) {
+			System.out.println("invalid input");
+		}
+	}
+
+}

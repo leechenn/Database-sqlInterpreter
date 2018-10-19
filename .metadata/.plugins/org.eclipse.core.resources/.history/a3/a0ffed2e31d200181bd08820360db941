@@ -1,0 +1,39 @@
+package util;
+
+public class randomNum {
+	
+	private BinaryTupleWriter btw;
+	
+	private BinaryTupleReader btr;
+	
+	private String inputfilepath;
+	
+	private String outputfilepath;
+	
+	public randomNum(String ifp, String ofp) {
+		inputfilepath = ifp;
+		outputfilepath = ofp;
+		btw = new BinaryTupleWriter(outputfilepath);
+		btr = new BinaryTupleReader(inputfilepath);
+	}
+	
+	public void randomTuple (int count, int columnNum, int min, int max) {
+		if (count < 0 || columnNum < 0 || min > max) {
+			System.out.println("invalid input");
+		}
+		else {
+			for (int i = 0; i < count; i ++) {
+				int[] temp = new int[columnNum];
+				for (int j = 0; j < columnNum; j ++) {
+					getRandomIntegerBetweenRange(min, max);
+				}
+			}
+		}
+	}
+	
+	public static double getRandomIntegerBetweenRange(double min, double max){
+	    double x = (int)(Math.random()*((max-min)+1))+min;
+	    return x;
+	}
+
+}

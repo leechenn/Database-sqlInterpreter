@@ -1,0 +1,32 @@
+package handler;
+
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import operator.Operator;
+
+public class LogicalPlanTree {
+	
+	public LogicalPlanTree root;
+	public LogicalPlanTree leftNode;
+	public LogicalPlanTree rightNode;
+	
+	public Operator op;
+	
+	public LogicalPlanTree(Operator o) {
+		root = this;
+		leftNode = null;
+		rightNode = null;
+		op = o;
+	}
+	
+	public LogicalPlanTree initTree(PlainSelect ps) {
+		String firstTable = ps.getFromItem().toString();
+		String[] strs = firstTable.split("\\s+");//if there is aliases
+		String tableName = strs[0];
+		String aliasName = strs[strs.length-1];
+		return node;
+	}
+	
+	public LogicalPlanTree buildTree() {
+		
+	}
+}
