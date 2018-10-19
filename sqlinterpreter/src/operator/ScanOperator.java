@@ -1,16 +1,17 @@
 package operator;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+//import java.io.BufferedReader;
+//import java.io.File;
+//import java.io.FileNotFoundException;
+//import java.io.FileReader;
+//import java.io.IOException;
+//import java.io.Reader;
 import java.util.Map;
 
 import entity.Tuple;
 import handler.App;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import util.BinaryTupleReader;
 
 
 /**
@@ -20,9 +21,10 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class ScanOperator extends Operator{
 	
-	private File file;
-	private BufferedReader br = null;
+//	private File file;
+//	private BufferedReader br = null;
 	private Map<String, Integer> curSchema;
+	private BinaryTupleReader btr;
 
 	/**
 	 * ScanOperator constructor for SQL without joined tables
@@ -33,7 +35,7 @@ public class ScanOperator extends Operator{
 		String[] strs = tableScanned.split("\\s+");//if there is aliases
 		String tableName = strs[0];
 		String aliasName = strs[strs.length-1];
-		this.file = new File(App.model.getDataStoredPath(tableName));
+//		this.file = new File(App.model.getDataStoredPath(tableName));
 		if(strs.length!=1) {
 		App.model.setAliaMap(strs);
 		App.model.setCurSchema(aliasName);  
@@ -41,7 +43,7 @@ public class ScanOperator extends Operator{
 		else {
 			App.model.iniCurSchema(tableName);
 		}
-		iniread();
+//		iniread();
 		curSchema = App.model.getCurSchema();
 	}
 	/**
@@ -53,7 +55,8 @@ public class ScanOperator extends Operator{
 		String[] strs = tableScanned.split("\\s+");//if there is aliases
 		String tableName = strs[0];
 		String aliasName = strs[strs.length-1];
-		this.file = new File(App.model.getDataStoredPath(tableName));
+		// this.file = new File(App.model.getDataStoredPath(tableName));
+		this.btr = new BinaryTupleReader(App.model.getDataStoredPath(tableName));
 		if(strs.length!=1) {
 		App.model.setAliaMap(strs);
 		App.model.setCurSchema(aliasName);
@@ -61,7 +64,7 @@ public class ScanOperator extends Operator{
 		else {
 			App.model.iniCurSchema(tableName);
 		}
-		iniread();
+//		iniread();
 		curSchema = App.model.getCurSchema();
 		
 	}
@@ -69,26 +72,27 @@ public class ScanOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {
 		Tuple tuple = null;
-		try {
-			String str = br.readLine();
-			if(str!=null) {
-				tuple = new Tuple(str);
-			}
-			else {
-				br.close();
-			}
-		} catch (IOException e) {
+		// try {
+//			String str = br.readLine();
+//			if(str!=null) {
+//				tuple = new Tuple(str);
+				
+		if ((tuple = btr.readNext())!=null)
+			return tuple;
+		else 
+			btr.close();
+			
+		// } catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			// e.printStackTrace();
+		// }
 		return tuple;
-		
 	}
 
 	@Override
 	public void reset() {	
-		iniread();
+		// iniread();
+		btr.reset();
 	}
 
 
@@ -96,17 +100,15 @@ public class ScanOperator extends Operator{
 		
 		return this.curSchema;
 	}
-	public void iniread() {
-		try {
-			Reader read = new FileReader(this.file);
-			br = new BufferedReader(read);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+//	public void iniread() {
+//		try {
+//			Reader read = new FileReader(this.file);
+////			br = new BufferedReader(read);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 
 }

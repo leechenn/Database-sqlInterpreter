@@ -12,7 +12,7 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  * SelectExpressionVisitor for filting tuple according to expression
  */
 /**

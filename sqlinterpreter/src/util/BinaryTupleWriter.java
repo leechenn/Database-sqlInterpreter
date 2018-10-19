@@ -84,10 +84,10 @@ public class BinaryTupleWriter implements TupleWriter{
 
 	@Override
 	public void writeFile() {
-		System.out.println("writing to file");
+//		System.out.println("writing to file");
 		page.putInt(0, columnNum);
 		page.putInt(4, count);
-		System.out.println("count is now:"+count);
+//		System.out.println("count is now:"+count);
 		assert(page.position()==4096);
 		
 		page.flip();
@@ -108,32 +108,32 @@ public class BinaryTupleWriter implements TupleWriter{
 		
 	}
 	
-	public static void main(String[] args) throws IOException {
-		String fp = "samples/input/db/data/test";
-		
-		String input = "samples/input/db/data/Boats";
-		
-		BinaryTupleWriter x = new BinaryTupleWriter(fp);
-		
-		BinaryTupleReader in = new BinaryTupleReader(input);
-		
-//		int[] a = {1,2,3};
-//		Tuple temp = new Tuple(a);
-		
-		Tuple temp;
-		
-		int c = 0;
-		while ((temp = in.readNext())!=null) {
-			System.out.println(c);
-			c++;
-			x.fillBuffer(temp);
-		}
-		x.finishWriting();
-			
-		BinaryTupleReader y = new BinaryTupleReader(fp);
-		while (y.fc.isOpen()) {
-			y.readNext();
-		}
-	}
+//	public static void main(String[] args) throws IOException {
+//		String fp = "samples/input/db/data/test";
+//		
+//		String input = "samples/input/db/data/Boats";
+//		
+//		BinaryTupleWriter x = new BinaryTupleWriter(fp);
+//		
+//		BinaryTupleReader in = new BinaryTupleReader(input);
+//		
+////		int[] a = {1,2,3};
+////		Tuple temp = new Tuple(a);
+//		
+//		Tuple temp;
+//		
+//		int c = 0;
+//		while ((temp = in.readNext())!=null) {
+//			System.out.println(c);
+//			c++;
+//			x.fillBuffer(temp);
+//		}
+//		x.finishWriting();
+//			
+//		BinaryTupleReader y = new BinaryTupleReader(fp);
+//		while (y.fc.isOpen()) {
+//			y.readNext();
+//		}
+//	}
 
 }

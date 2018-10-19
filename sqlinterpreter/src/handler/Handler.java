@@ -133,10 +133,14 @@ public static void parseSql() {
                 else {
                 	operator = new SortOperator(projectOperator, plainSelect);
                 }
+                //benchmarking
+                long start = System.currentTimeMillis();
                 operator.dump(sqlCount);
+                long end = System.currentTimeMillis();
                 
-            	
-            }
+                long elapsed = end - start;
+                System.out.println(elapsed);
+            	}
             }
 
             finally{sqlCount = sqlCount + 1;}

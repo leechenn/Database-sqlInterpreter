@@ -10,7 +10,7 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 
 
 /**
- * @author Chen Li, QinXuan Pian
+ * @author Chen Li, Qinxuan Pian
  *
  */
 public class ProjectOperator extends Operator {

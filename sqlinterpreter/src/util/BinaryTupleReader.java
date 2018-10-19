@@ -23,7 +23,7 @@ public class BinaryTupleReader implements TupleReader{
 		
 		page = ByteBuffer.allocate(4096); //one page = 4096 bytes
 		filepath = fp;
-		System.out.println("initiation");
+//		System.out.println("initiation");
 		
 		try {
 			fin = new FileInputStream(filepath);
@@ -42,7 +42,7 @@ public class BinaryTupleReader implements TupleReader{
 	}
 	
 	public void fillPage() {
-		System.out.println("fillpage");
+//		System.out.println("fillpage");
 
 		assert (count == 0);
 		
@@ -54,7 +54,7 @@ public class BinaryTupleReader implements TupleReader{
 
 		try {
 			int temp = fc.read(page);
-			System.out.println("bytes read: " + temp);
+//			System.out.println("bytes read: " + temp);
 			if (temp == -1) {// nothing left to read into the buffer
 				close();
 			}
@@ -62,8 +62,8 @@ public class BinaryTupleReader implements TupleReader{
 				page.flip();
 				columnNum = page.getInt();
 				count = page.getInt();
-				System.out.println("count is "+count);
-				System.out.println("tuple size is "+columnNum);
+//				System.out.println("count is "+count);
+//				System.out.println("tuple size is "+columnNum);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,13 +72,13 @@ public class BinaryTupleReader implements TupleReader{
 
 	@Override
 	public Tuple readNext() {
-		System.out.println("readnext");
+//		System.out.println("readnext");
 		Tuple next = null;
 		if (count == 0) {
 			fillPage();
 			// if count is still 0 => nothing left to read
 			if (count == 0) {
-				System.out.println("end of file");
+//				System.out.println("end of file");
 				return next;
 				}
 			else
@@ -91,15 +91,15 @@ public class BinaryTupleReader implements TupleReader{
 			}
 			count --;
 			next = new Tuple(result);
-			for (int i = 0; i < result.length; i ++)
-				System.out.println(next.getData()[i]);
+//			for (int i = 0; i < result.length; i ++)
+//				System.out.println(next.getData()[i]);
 			return next;
 		}
 	}
 
 	@Override
 	public void close() {
-		System.out.println("Closing channel");
+//		System.out.println("Closing channel");
 		try {
 			fin.close();
 		} catch (IOException e) {
@@ -118,13 +118,13 @@ public class BinaryTupleReader implements TupleReader{
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		String fp = "samples/input/db/data/Boats";
-		
-		BinaryTupleReader x = new BinaryTupleReader(fp);
-		
-		while (x.fc.isOpen()) {
-			x.readNext();
-		}
-	}
+//	public static void main(String[] args) throws IOException {
+//		String fp = "samples/input/db/data/Boats";
+//		
+//		BinaryTupleReader x = new BinaryTupleReader(fp);
+//		
+//		while (x.fc.isOpen()) {
+//			x.readNext();
+//		}
+//	}
 }
