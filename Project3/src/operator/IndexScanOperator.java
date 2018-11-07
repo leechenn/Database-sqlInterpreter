@@ -2,7 +2,6 @@ package operator;
 
 import java.io.File;
 import java.util.Map;
-
 import bPlusTree.Rid;
 import bPlusTree.TreeDeserializer;
 import entity.Tuple;
@@ -24,10 +23,8 @@ private Map<String, Integer> curSchema;
 
 public IndexScanOperator(PlainSelect plainSelect ,String table, String indexKey, Integer lowKey, Integer highKey, boolean isClustered) {
 	
-	
 	tableScanned = null;
-	tableScanned = plainSelect.getFromItem().toString();// first table in from item
-	
+	tableScanned = plainSelect.getFromItem().toString();// first table in from item	
 	String[] strs = tableScanned.split("\\s+");//if there is aliases
 	tableScanned = strs[0];
 	String aliasName = strs[strs.length-1];
@@ -40,10 +37,6 @@ public IndexScanOperator(PlainSelect plainSelect ,String table, String indexKey,
 	}
 
 	curSchema = App.model.getCurSchema();
-	
-	
-	
-	
 	this.lowKey = lowKey;
 	this.highKey = highKey;
 	this.isClustered = isClustered;
@@ -59,6 +52,13 @@ public IndexScanOperator(PlainSelect plainSelect ,String table, String indexKey,
 	}
 	
 }
+
+
+
+/**
+ * return the next tuple, if is clustered, the start position of file need to be found and then just scan the file sequentially
+ * if is unclustered, every time the rid need to be retrieved from dataEntry and read the tuple according to the (pageId, tupleId) set
+ */
 public Tuple getNextTuple() {
 	Tuple tuple = null;
 	if(rid == null) {
@@ -76,6 +76,10 @@ public Tuple getNextTuple() {
 	}
 	
 }
+
+/**
+ * make the rid pointer return to the first one
+ */
 @Override
 public void reset() {
 	// TODO Auto-generated method stub

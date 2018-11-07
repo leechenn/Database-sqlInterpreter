@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class TreeDeserializer {
 	private File indexFile;
 	private FileChannel fc;
@@ -43,14 +47,11 @@ public TreeDeserializer(File indexFile,Integer lowKey,Integer highKey) {
 	buffer = ByteBuffer.allocate(4096);
 	this.readHead();
 }
-//public static void main(String[] args) {
-//	List<Integer> list = new ArrayList<Integer>();
-//	list.add(4);
-//	list.add(7);
-//	list.add(9);
-//	list.add(10);
-//	System.out.println(Collections.binarySearch(list, 8));
-//}
+
+
+/**
+ * read index header
+ */
 public void readHead() {
 	readPage(0);
 	this.rootAddress = buffer.getInt(0);
@@ -59,6 +60,11 @@ public void readHead() {
 	clearBuffer();
 	
 }
+
+/**
+ * Read page according to page number
+ * @param pageId
+ */
 public void readPage(int pageId) {
 	clearBuffer();
 	try {
@@ -73,6 +79,7 @@ public void readPage(int pageId) {
 	
 	
 }
+
 public void clearBuffer() {
 	buffer.clear();
 	buffer.put(new byte[4096]);
@@ -119,7 +126,7 @@ public void findStartLeaf() {
 
 /**
  * get next rid
- * @return
+ * @return next rid set
  */
 public Rid getNextRid() {
 	if(this.curLeaf==null) {
@@ -150,7 +157,7 @@ public Rid getNextRid() {
 	
 }
 /**
- * get keys and addresses pair from a indexNode
+ * get keys and addresses pair from a indexNode 
  * @return
  */
 public List<Integer>[] getKeyAddressPair(int address) {
@@ -171,6 +178,12 @@ public List<Integer>[] getKeyAddressPair(int address) {
 	keyAddressPair[1] = addressList;
 	return keyAddressPair;
 }
+
+/**
+ * Deserialize a leafNode
+ * @param address
+ * @return a leafNode
+ */
 public LeafNode leafNodeD(int address) {
 	this.readPage(address);
 	buffer.position(4);

@@ -1,9 +1,15 @@
 package bPlusTree;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class Header {
+	
 private int rootAddress;
 private int leafNum;
 private int orderNum;
+
 public int getRootAddress() {
 	return rootAddress;
 }

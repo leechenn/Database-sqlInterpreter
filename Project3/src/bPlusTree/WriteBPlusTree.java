@@ -7,10 +7,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
-
 import handler.App;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class WriteBPlusTree {
+	
 	private File indexFile;
 	private int pageSize = 4096;
 	private int leafFlag = 0;
@@ -28,7 +32,6 @@ public class WriteBPlusTree {
 		this.leafNodeList = leafNodeList;
 		this.header = header;
 		this.indexFile = new File(indexFileName);
-		System.out.println(indexFile);
 		try {
 			fc = new FileOutputStream(this.indexFile).getChannel();
 			buffer = buffer.allocate(pageSize);
@@ -39,6 +42,10 @@ public class WriteBPlusTree {
 		
 		
 	}
+	
+	/**
+	 * write the entire index tree to file
+	 */
 	public void writeToFile() {
 		//write header
 		long headerPosition = 0;

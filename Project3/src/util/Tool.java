@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import entity.Tuple;
 import handler.App;
 import net.sf.jsqlparser.expression.BinaryExpression;
@@ -22,13 +21,24 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.schema.Column;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class Tool {
+	
 	private List<Expression> indexKeyExpList = new ArrayList<Expression>();
 	private List<Expression> otherExp = new ArrayList<Expression>();
 	private Expression otherExpCombined;
 	private boolean canUseIndex;
 	private Integer lowKey;
 	private Integer highKey;
+	
+	/**
+	 * @param tableFile
+	 * @param index
+	 * If Btree is clustered, the table need to be sorted by the index key
+	 */
 	public static void sortTableByIndex(File tableFile, int index) {
 
 		List<Tuple> tupleList = new ArrayList<Tuple>();
@@ -76,7 +86,15 @@ public class Tool {
 		tw.close();
 	}
 
-	//a table's attribute in expression can be used as an index key search
+	
+	
+	
+	/**
+	 * @param tableName
+	 * @param selectExp
+	 * verify if the index can be used in selection condition. if it could, split the selection condition into two portion,
+	 * one portion for index and the other portion(reminder) for SelectOperator to deal with.
+	 */
 	public void retrieveIdxAttr(String tableName, Expression selectExp) {
 		String[] indexInfo = App.model.getIndexInfoMap().get(tableName);
 		if(selectExp==null||indexInfo==null) {
@@ -91,8 +109,9 @@ public class Tool {
 		}
 		expressionList.add(selectExp);
 
+		
 		for (Expression expr : expressionList) {
-			System.out.println("expression:"+expr);
+//			System.out.println("expression:"+expr);
 			Expression left = 
 					((BinaryExpression) expr).getLeftExpression();
 			Expression right = 
@@ -108,6 +127,7 @@ public class Tool {
 					if (str.indexOf('.') != -1) {
 						str = str.split("\\.")[1];
 					}
+					//a table's attribute in expression can be used as an index key search
 					if (str.equals(indexInfo[1])) {
 						this.indexKeyExpList.add(expr);
 						this.canUseIndex = true;
@@ -123,6 +143,7 @@ public class Tool {
 
 		}
 		if(this.canUseIndex) {
+			//if the index in index file could be used, find low key and high key for index scan search
 			for(Expression exp:this.indexKeyExpList) {
 				if(exp instanceof EqualsTo) {
 					if(((EqualsTo) exp).getLeftExpression() instanceof LongValue) {

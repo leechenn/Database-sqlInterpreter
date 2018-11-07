@@ -33,17 +33,20 @@ import operator.TupleNestedLoopJoinOperator;
  *
  */
 public class PhysicalPlanBuilder {
+	
 	private Operator op;
 	private List<String> leftOderList = new ArrayList<String>();
 	private List<String> rightOrderList = new ArrayList<String>();
-	
+
 	public void visit(LogicalSelectOperator logicalSelectOperator) {
 		// TODO Auto-generated method stub
-		
+
 		op = null;
+		
+		//if index can not be used, create full-scan operator as child
 		if(!App.model.useIndex) {
-		logicalSelectOperator.getChild().accept(this);
-		op = new SelectOperator((ScanOperator)op,logicalSelectOperator.plainSelect,logicalSelectOperator.getExpr());
+			logicalSelectOperator.getChild().accept(this);
+			op = new SelectOperator((ScanOperator)op,logicalSelectOperator.plainSelect,logicalSelectOperator.getExpr());
 		}else {
 			if(logicalSelectOperator.getChild() instanceof LogicalScanOperator) {
 				LogicalScanOperator logicalScanOperator = (LogicalScanOperator)logicalSelectOperator.getChild();
@@ -53,13 +56,14 @@ public class PhysicalPlanBuilder {
 					String tableName = strs[0];
 					Tool tool = new Tool();
 					tool.retrieveIdxAttr(tableName, logicalSelectOperator.getExpr());
+					//if index file should be used according to config, but in selection condition, there is no portion for index
 					if(tool.canUseIndex()) {
-					boolean isClustered = false;
-					if(Integer.valueOf(App.model.getIndexInfoMap().get(tableName)[2])==1) {
-						isClustered = true;
-					}
-					IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered);
-					op = new SelectOperator(indexScanOperator,logicalSelectOperator.plainSelect,tool.getOtherExp());
+						boolean isClustered = false;
+						if(Integer.valueOf(App.model.getIndexInfoMap().get(tableName)[2])==1) {
+							isClustered = true;
+						}
+						IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered);
+						op = new SelectOperator(indexScanOperator,logicalSelectOperator.plainSelect,tool.getOtherExp());
 					}else {
 						logicalSelectOperator.getChild().accept(this);
 						op = new SelectOperator((ScanOperator)op,logicalSelectOperator.plainSelect,logicalSelectOperator.getExpr());
@@ -71,21 +75,21 @@ public class PhysicalPlanBuilder {
 					Tool tool = new Tool();
 					tool.retrieveIdxAttr(tableName, logicalSelectOperator.getExpr());
 					if(tool.canUseIndex()) {
-					boolean isClustered = false;
-					if(Integer.valueOf(App.model.getIndexInfoMap().get(tableName)[2])==1) {
-						isClustered = true;
-					}
-					IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered);
-					op = new SelectOperator(indexScanOperator,logicalSelectOperator.plainSelect,tool.getOtherExp());
+						boolean isClustered = false;
+						if(Integer.valueOf(App.model.getIndexInfoMap().get(tableName)[2])==1) {
+							isClustered = true;
+						}
+						IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered);
+						op = new SelectOperator(indexScanOperator,logicalSelectOperator.plainSelect,tool.getOtherExp());
 					}else {
 						logicalSelectOperator.getChild().accept(this);
 						op = new SelectOperator((ScanOperator)op,logicalSelectOperator.plainSelect,logicalSelectOperator.getExpr());
 					}
 				}
 			}
-			
-			
-			
+
+
+
 		}
 	}
 

@@ -2,14 +2,23 @@ package bPlusTree;
 
 import java.util.List;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class LeafNode extends Node {
 	
 private List<DataEntry> dataEntries;
 private int orderNum;
 private int minKey;
 
+/**
+ * @param order
+ * @param dataEntries
+ */
 public LeafNode(int order,List<DataEntry> dataEntries){
-	this.minKey = dataEntries.get(0).getKey();
+	
+	this.minKey = dataEntries.get(0).getKey();//record the minimum key for each leaf Node
 	this.orderNum = order;
 	this.dataEntries = dataEntries;
 }

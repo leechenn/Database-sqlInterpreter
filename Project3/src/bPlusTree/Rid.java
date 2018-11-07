@@ -2,6 +2,10 @@ package bPlusTree;
 
 import java.util.Comparator;
 
+/**
+ * @author Chen Li, QinXuan Pian
+ *
+ */
 public class Rid {
 	
 private int pageId;
