@@ -2,12 +2,19 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="getData" key="selection"/>
+		<item value="iniJoinedTableExp" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="combine"/>
+			<item value="useIndex"/>
+			<item value="count"/>
+			<item value="keyInt"/>
+			<item value="System.out.println();"/>
+			<item value="system.print"/>
+			<item value="List&lt;DataEntry&gt; oneLeafNodeList = new ArrayList&lt;DataEntry&gt;();"/>
 			<item value="getData"/>
 		</list>
 		<list key="replacehistory">
@@ -17,7 +24,7 @@
 		<item value="290" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="409" key="DIALOG_HEIGHT"/>
-		<item value="502" key="DIALOG_X_ORIGIN"/>
-		<item value="112" key="DIALOG_Y_ORIGIN"/>
+		<item value="868" key="DIALOG_X_ORIGIN"/>
+		<item value="118" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

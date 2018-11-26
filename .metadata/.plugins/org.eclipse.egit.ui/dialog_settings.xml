@@ -11,10 +11,12 @@
 		<item value="github.com"/>
 	</list>
 	<list key="CommitDialog.authorValues">
+		<item value="leechenn &lt;leechenn0600@gmail.com&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-uris-3694.eduroam.cornell.edu&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-hol-1511.eduroam.cornell.edu&gt;"/>
 	</list>
 	<list key="CommitDialog.committerValues">
+		<item value="leechenn &lt;leechenn0600@gmail.com&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-uris-3694.eduroam.cornell.edu&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-hol-1511.eduroam.cornell.edu&gt;"/>
 	</list>

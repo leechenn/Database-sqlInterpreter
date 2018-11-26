@@ -27,12 +27,12 @@ import util.PhysicalPlanBuilder;
  * Handler class for parsing SQL and put reault to output dir
  */
 public class Handler {
-//	public static void main(String[] args) {
-//		String[] strArray  = {"samples-2 2/interpreter_config_file.txt"};
-//		App.main(strArray);
-//
-//
-//	}
+	public static void main(String[] args) {
+		String[] strArray  = {"samples-2 2/interpreter_config_file.txt"};
+		App.main(strArray);
+
+
+	}
 	public static void init() {
 		//	get output path from Catalog and build a directory
 		String outputPath = App.model.getOutputPath();

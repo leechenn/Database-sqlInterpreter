@@ -1,0 +1,5 @@
+samples/input
+samples/output
+samples/tempdir
+1
+1

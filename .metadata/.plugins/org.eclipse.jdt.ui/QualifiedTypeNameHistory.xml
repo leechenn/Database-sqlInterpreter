@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="util.BinaryTupleReader"/>
-    <fullyQualifiedTypeName name="util.BinaryTupleWriter"/>
+<fullyQualifiedTypeName name="util.BinaryTupleReader"/>
+<fullyQualifiedTypeName name="util.BinaryTupleWriter"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="entity.Tuple"/>
+<fullyQualifiedTypeName name="java.util.Comparator"/>
+<fullyQualifiedTypeName name="java.util.Collections"/>
+<fullyQualifiedTypeName name="bPlusTree.Rid.ridCompare"/>
+<fullyQualifiedTypeName name="bPlusTree.DataEntry.dataEntryCompare"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="util.Catalog"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="net.sf.jsqlparser.expression.Expression"/>
+<fullyQualifiedTypeName name="handler.App"/>
 </qualifiedTypeNameHistroy>
