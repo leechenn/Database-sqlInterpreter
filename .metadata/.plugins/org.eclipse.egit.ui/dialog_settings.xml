@@ -11,11 +11,13 @@
 		<item value="github.com"/>
 	</list>
 	<list key="CommitDialog.authorValues">
+		<item value="qpian &lt;qpian@172.31.99.1&gt;"/>
 		<item value="leechenn &lt;leechenn0600@gmail.com&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-uris-3694.eduroam.cornell.edu&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-hol-1511.eduroam.cornell.edu&gt;"/>
 	</list>
 	<list key="CommitDialog.committerValues">
+		<item value="qpian &lt;qpian@172.31.99.1&gt;"/>
 		<item value="leechenn &lt;leechenn0600@gmail.com&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-uris-3694.eduroam.cornell.edu&gt;"/>
 		<item value="qpian &lt;qpian@dhcp-hol-1511.eduroam.cornell.edu&gt;"/>
@@ -27,8 +29,8 @@
 		<item value="650" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="440" key="DIALOG_HEIGHT"/>
-		<item value="298" key="DIALOG_X_ORIGIN"/>
-		<item value="116" key="DIALOG_Y_ORIGIN"/>
+		<item value="-34" key="DIALOG_X_ORIGIN"/>
+		<item value="133" key="DIALOG_Y_ORIGIN"/>
 		<list key="sashWeights">
 			<item value="600"/>
 			<item value="400"/>
@@ -38,8 +40,8 @@
 		<item value="523" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="389" key="DIALOG_HEIGHT"/>
-		<item value="386" key="DIALOG_X_ORIGIN"/>
-		<item value="125" key="DIALOG_Y_ORIGIN"/>
+		<item value="47" key="DIALOG_X_ORIGIN"/>
+		<item value="114" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="GitCommitMessageComponent">
 	</section>
@@ -47,7 +49,7 @@
 		<item value="600" key="DIALOG_WIDTH"/>
 		<item value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont" key="DIALOG_FONT_NAME"/>
 		<item value="440" key="DIALOG_HEIGHT"/>
-		<item value="347" key="DIALOG_X_ORIGIN"/>
+		<item value="110" key="DIALOG_X_ORIGIN"/>
 		<item value="91" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="org.eclipse.egit.ui.internal.dialogs.MergeTargetSelectionDialog.dialogBounds">
