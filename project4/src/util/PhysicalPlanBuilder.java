@@ -38,6 +38,7 @@ public class PhysicalPlanBuilder {
 	private Operator op;
 	private List<String> leftOderList = new ArrayList<String>();
 	private List<String> rightOrderList = new ArrayList<String>();
+	private ArrayList<String> relations;
 
 	public void visit(LogicalSelectOperator logicalSelectOperator) {
 		// TODO Auto-generated method stub
@@ -147,6 +148,7 @@ public class PhysicalPlanBuilder {
 		op = null;
 		logicalJoinOperator.getRight().accept(this);
 		p.right = op;
+		
 		switch (App.model.joinConfig) {
 		case 0:
 			op = new TupleNestedLoopJoinOperator(p.left,p.right,logicalJoinOperator.plainSelect,logicalJoinOperator.getExpr());
@@ -175,6 +177,17 @@ public class PhysicalPlanBuilder {
 
 		}
 	}
+	
+	// 我新加的visit 但是我不大确定里面relations应该用什么type
+	// 用一个joinOrder class来计算并返回一个顺序
+	// 目前这个顺序是一个 ArrayList<Stirng>
+	// 感觉好像只有这个table name在这个顺序里面 可能不大对
+	// 可能你得改一改里面的type什么的
+	public void visit(LogicalMultiJoinOperator multiJoinOperator) {
+		JoinOrder joinOrder = new JoinOrder (multiJoinOperator);
+		relations = joinOrder.getOrderedRelations();
+		// TODO: part 4: choose an appropriate join operator for the returned left deep tree
+	}
 	/**
 	 * Assign orderList to the left child and right child of SMJ, assuming all queries used to test SMJ will contain equijoins only
 	 * @param expression
@@ -199,10 +212,6 @@ public class PhysicalPlanBuilder {
 		Operator left;
 		Operator right;
 
-	}
-	public void visit(LogicalMultiJoinOperator logicalMultiJoinOperator) {
-		// TODO Auto-generated method stub
-		
 	}
 
 

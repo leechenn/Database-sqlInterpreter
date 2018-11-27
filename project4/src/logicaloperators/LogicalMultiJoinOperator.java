@@ -11,7 +11,7 @@ import util.UnionFind;
 public class LogicalMultiJoinOperator extends LogicalOperator {
 private Expression residualJoinCon;
 private UnionFind uf;
-private List<String> tableList;
+public List<String> tableList;
 private List<LogicalOperator> children;
 
 public LogicalMultiJoinOperator(List<String> tableList,List<LogicalOperator> children,Expression res,UnionFind uf) {
