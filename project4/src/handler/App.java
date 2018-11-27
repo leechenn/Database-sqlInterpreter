@@ -32,6 +32,8 @@ public static Catalog model;
         	model = Catalog.getInstance(inputPath,outputPath,tempDir,buildIndexFlag,evaluateSqlFlag);//create a singleton for Catalog and store it as static variable in App named model
         	Stats stats = new Stats();
         	stats.storeTableInfo();
+        	model.setStats(stats);
+        	model.resetIdxInfo();
         	//if evaluate sql
         	if(Catalog.evaluateSql) {
             Handler.init();
