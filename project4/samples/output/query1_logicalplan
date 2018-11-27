@@ -1,0 +1,10 @@
+DupElim
+-Sort[S.A]
+--Project[S.A]
+---Join[S.A <> B.D]
+[[S.B, B.D], equals null, min null, max null]
+[[S.A, B.E], equals null, min 151, max 1500]
+----Select[S.A > S.B AND S.A >= 151 AND S.A <= 1500]
+-----Leaf[Sailors]
+----Select[B.E >= 151 AND B.E <= 1500]
+-----Leaf[Boats]

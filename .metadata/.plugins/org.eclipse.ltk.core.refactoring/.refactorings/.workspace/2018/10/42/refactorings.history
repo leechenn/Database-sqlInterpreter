@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;Database-sqlInterpreter&apos;" deleteContents="false" description="Delete resource &apos;Database-sqlInterpreter&apos;" element1="/Database-sqlInterpreter" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1539763240698"/>&#x0A;<refactoring comment="Delete resource &apos;Database-sqlInterpreter&apos;" deleteContents="false" description="Delete resource &apos;Database-sqlInterpreter&apos;" element1="/Database-sqlInterpreter" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1539795047449"/>
-</session>

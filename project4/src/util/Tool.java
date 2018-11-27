@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import entity.Tuple;
 import handler.App;
@@ -35,6 +38,7 @@ public class Tool {
 	private boolean canUseIndex;
 	private Integer lowKey;
 	private Integer highKey;
+	
 	
 	/**
 	 * @param tableFile
@@ -285,4 +289,81 @@ public class Tool {
 	public Expression getOtherExp() {
 		return this.otherExpCombined;
 	}
+	private static void updateRange(Integer[] range, int val, 
+			boolean isLower, boolean inclusive, boolean oppo) {
+		if (oppo) {
+			updateRange(range, val, !isLower, inclusive, false);
+			return;
+		}
+		
+		if (!inclusive)
+			val = (isLower) ? val + 1 : val - 1;
+		
+		if (isLower)
+			range[0] = (range[0] == null) ? val : 
+				Math.max(range[0], val);
+		else
+			range[1] = (range[1] == null) ? val :
+				Math.min(range[1], val);
+	}
+	/**
+	 * 
+	 * @param exp
+	 * @param attr
+	 * @return int[]rst  rst[0] max, rst[1] min
+	 */
+	public static Integer[] getSelRange(Expression exp, String[] attr) {
+		
+		Expression left = 
+				((BinaryExpression) exp).getLeftExpression();
+		Expression right = 
+				((BinaryExpression) exp).getRightExpression();
+		
+		Integer val = null;
+		
+		
+		if (left instanceof Column) {
+			attr[0] = left.toString();
+			val = Integer.parseInt(right.toString());
+		}
+		else {
+			attr[0] = right.toString();
+			val = Integer.parseInt(left.toString());
+		}
+		
+		boolean oppo = !(left instanceof Column);
+		boolean inclusive = !(exp instanceof MinorThan) && 
+				!(exp instanceof GreaterThan);
+		boolean isUpper = (exp instanceof MinorThan ||
+				exp instanceof MinorThanEquals || 
+				exp instanceof EqualsTo);
+		boolean isLower = (exp instanceof GreaterThan ||
+				exp instanceof GreaterThan || 
+				exp instanceof EqualsTo);
+		
+		if (!isLower && !isUpper)
+			throw new IllegalArgumentException();
+		
+		Integer[] ret = new Integer[2];
+		
+		if (isLower)
+			updateRange(ret, val, true, inclusive, oppo);
+		if (isUpper)
+			updateRange(ret, val, false, inclusive, oppo);
+		
+		return ret;
+	}
+	public static List<Expression> decompAnds(Expression exp) {
+		List<Expression> ret = new ArrayList<Expression>();
+		while (exp instanceof AndExpression) {
+			AndExpression and = (AndExpression) exp;
+			ret.add(and.getRightExpression());
+			exp = and.getLeftExpression();
+		}
+		ret.add(exp);
+		
+		Collections.reverse(ret);
+		return ret;
+	}
+	
 }

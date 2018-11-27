@@ -92,6 +92,9 @@ public void storeTableInfo() {
 	}
 	}
 }
+public  HashMap<String, TableInfo> getStatsMap() {
+	return this.statsMap;
+}
 public String[] retrieveAttrsName(String[] names) {
 	int len = names.length;
 	String[] attrsName = new String[len-1];

@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -41,6 +42,9 @@ public class Catalog {
 	private List<Expression> allExp;//all expression in get where expression
 	private List<String> joinedTableList;//list of joined tables
 	private Map<String, String[]> indexInfoMap = new HashMap<String,String[]>();//index info map
+	public Map<String,TableInfo> tableInfoMap = new HashMap<String,TableInfo>();
+	public Map<String, List<IndexInfo>> tableInfo = new HashMap<String, List<IndexInfo>>();	// The index info for the tables.
+	public Stats stats;
 	public int joinConfig;
 	public int joinBuffer;
 	public int sortConfig;
@@ -155,6 +159,12 @@ public class Catalog {
 		}
 		return instance;
 	}
+	public void setStats(Stats stats) {
+		this.stats = stats;
+	}
+	public Stats getStats() {
+		return this.stats;
+	}
 	public void iniAllTableList() {
 		allTableList = new ArrayList<String>();
 	}
@@ -189,6 +199,13 @@ public class Catalog {
 	public void setAliaMap(String[] aliaStr) {
 		//		key is alias name
 		this.aliaMap.put(aliaStr[2], aliaStr[0]);
+	}
+	public String searchTableName(String alias) {
+		if(this.aliaMap.get(alias)!=null) {
+			return this.aliaMap.get(alias);
+		}else {
+			return alias;
+		}
 	}
 	public String getIndexFile() {
 		return this.indexFile;
@@ -242,6 +259,64 @@ public class Catalog {
 	}
 	public Map<String, String[]> getIndexInfoMap(){
 		return this.indexInfoMap;
+	}
+	
+	public void resetIdxInfo() {
+		
+		try (BufferedReader br = new BufferedReader(
+				new FileReader(indexFile))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				String[] str = line.split(" ");
+				String relt = str[0];
+				String attr = str[1];
+				boolean clust = (str[2].equals("1"));
+				int ord = Integer.parseInt(str[3]);
+				addIndexInfo(relt, attr, clust, ord);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+	public IndexInfo getIndexInfo(String table, String attr) {
+		List<IndexInfo> indexInfos = getIndexInfoList(table);
+		if (indexInfos == null) return null;
+		
+		// find the index info with the attribute name
+		for (IndexInfo info : indexInfos) {
+			if (info.attr.equals(attr)) return info;
+		}
+		
+		// Does not found
+		return null;
+	}
+	
+	
+	public List<IndexInfo> getIndexInfoList(String table) {
+		// transfer to the origin table name
+		String originTable = App.model.searchTableName(table);
+		if (!tableInfo.containsKey(originTable)) {
+			return null;
+		}
+		return tableInfo.get(originTable);
+	}
+	public void addIndexInfo(String relation, String attr, boolean clust, int ord) {
+		// create the table item if does not exist.
+		if (!tableInfo.containsKey(relation)) {
+			tableInfo.put(relation, new LinkedList<IndexInfo>());
+		}
+		
+		List<IndexInfo> indicesOfTheTable = tableInfo.get(relation);
+		
+		IndexInfo info = new IndexInfo(relation, attr, clust, ord);
+		
+		// we should add clustered at the head of the list.
+		if (clust) {
+			indicesOfTheTable.add(0, info);
+		} else {
+			indicesOfTheTable.add(info);
+		}
 	}
 
 }
