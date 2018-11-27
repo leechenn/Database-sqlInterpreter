@@ -35,5 +35,10 @@ public class LogicalJoinOperator extends LogicalOperator {
 	public Expression getExpr() {
 		return expr;
 	}
+	@Override
+	public String printLogicalTree() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

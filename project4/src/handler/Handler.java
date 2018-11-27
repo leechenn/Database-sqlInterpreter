@@ -2,11 +2,14 @@ package handler;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import entity.Tuple;
 import logicaloperators.LogicalDuplicateEliminationOperator;
 import logicaloperators.LogicalJoinOperator;
+import logicaloperators.LogicalMultiJoinOperator;
 import logicaloperators.LogicalOperator;
 import logicaloperators.LogicalProjectOperator;
 import logicaloperators.LogicalScanOperator;
@@ -17,10 +20,12 @@ import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
-import operator.IndexScanOperator;
 import operator.Operator;
+import util.Element;
 import util.JoinExtract;
 import util.PhysicalPlanBuilder;
+import util.Tool;
+import util.UnionFindVisitor;
 
 /**
  * @author Chen Li, QinXuan Pian
@@ -45,7 +50,11 @@ public class Handler {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(sqlFile));
 			Statement statement;
 			int sqlCount = 1;
-			while ((statement = parser.Statement()) != null) { 
+			while ((statement = parser.Statement()) != null) {
+				File logicalPlanFile = new File(App.model.getOutputPath()+"/query"+sqlCount+"_logicalplan");
+				File physicalPlanFile = new File(App.model.getOutputPath()+"/query"+sqlCount+"_physicalplan");
+				PrintStream logicalPlanStream = new PrintStream(logicalPlanFile);
+				PrintStream physicalPlanStream = new PrintStream(physicalPlanFile);		
 				Select select = (Select) statement;
 				PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
 				try {
@@ -80,6 +89,8 @@ public class Handler {
 					Operator leftOp;
 					LogicalOperator leftLogicalOp;
 					if(plainSelect.getJoins()!=null) {
+						
+						
 						List list = plainSelect.getJoins();
 						int size = list.size();
 						App.model.iniAllTableList();
@@ -94,6 +105,7 @@ public class Handler {
 						else {
 							tableList.add(tableName);
 						}
+						
 						//first table
 						App.model.iniJoinedTableList();
 						List<String> joinedTableList = App.model.getJoinedTableList();
@@ -111,15 +123,63 @@ public class Handler {
 								joinedTableList.add(tableName);
 							}
 						}
+						
 						App.model.iniSingleTableExp(App.model.getAllTableList().size());
 						App.model.iniJoinedTableExp(App.model.getJoinedTableList().size());
 						App.model.iniAllExp();
 						App.model.iniSingleTableExp(tableList.size());
 						App.model.iniJoinedTableExp(tableList.size()-1);
 						JoinExtract joinExtractVisitor = new JoinExtract();
+						
+						UnionFindVisitor ufVisitor = new UnionFindVisitor(tableList);//tableList to store expression info
+						
 						if(plainSelect.getWhere()!=null) {
-							plainSelect.getWhere().accept(joinExtractVisitor);
+							plainSelect.getWhere().accept(joinExtractVisitor);					
+							plainSelect.getWhere().accept(ufVisitor);
+							System.out.println("ElementList:"+ufVisitor.getUf().getElementList());
+							System.out.println("residual:"+ufVisitor.getResidualExp());
 						}
+						
+						HashMap<String, List<Expression>> selectionMap = ufVisitor.getSelectionMap();
+						
+						for (String attr : ufVisitor.getUf().getUnionMap().keySet()) {
+							Element ufe = ufVisitor.getUf().findElement(attr);
+							String tab = attr.split("\\.")[0];
+							String col = attr.split("\\.")[1];
+							List<Expression> lst = selectionMap.get(tab);
+							Integer eq = ufe.getEquality();
+							Integer lower = ufe.getLowerB();
+							Integer upper = ufe.getUpperB();				
+							if (eq != null)
+								lst.add(Tool.createCondition(
+										tab, col, eq, true, false));
+							else {
+								if (lower != null)
+									lst.add(Tool.createCondition(
+											tab, col, lower, false, true));
+								if (upper != null)
+									lst.add(Tool.createCondition(
+											tab, col, upper, false, false));
+							}
+						}
+						HashMap<String,Expression> finalSelectionCondition = new HashMap<String,Expression>();
+						for(String tab:App.model.getAllTableList()) {
+							finalSelectionCondition.put(tab, Tool.genAnds(selectionMap.get(tab)));
+						}
+						List<Expression> residualJoinCondition = ufVisitor.getResidualJoinExp();
+						Expression finalResidualCondition = Tool.genAnds(residualJoinCondition);
+						System.out.println("residualJoinCondition:"+finalResidualCondition );
+						System.out.println("SelectionCondition:"+finalSelectionCondition);
+						
+						//for multiJoin
+						
+						List<LogicalOperator> tables = new ArrayList<>();
+						LogicalOperator tmp =  new LogicalScanOperator(plainSelect);
+						if(finalSelectionCondition.get(App.model.getAllTableList().get(0))!=null) {
+							tmp = new LogicalSelectOperator(tmp,plainSelect, finalSelectionCondition.get(App.model.getAllTableList().get(0)));
+						}
+						tables.add(tmp);
+						
 
 						int tableCount = plainSelect.getJoins().size();
 						leftLogicalOp = new LogicalScanOperator(plainSelect);
@@ -133,7 +193,11 @@ public class Handler {
 
 						}
 						for(int i = 0; i < tableCount; ++i){
-
+							tmp =  new LogicalScanOperator(plainSelect,i);
+							if(finalSelectionCondition.get(App.model.getAllTableList().get(i+1))!=null) {
+								tmp = new LogicalSelectOperator(tmp,plainSelect, finalSelectionCondition.get(App.model.getAllTableList().get(i+1)));
+							}
+							tables.add(tmp);
 							LogicalOperator LogicalOperatorRight = new LogicalScanOperator(plainSelect, i);
 							if(App.model.getsingleTableExp()[i+1]!=null) {
 
@@ -154,7 +218,22 @@ public class Handler {
 							}
 
 						}
-
+						LogicalOperator root;
+						root = new LogicalMultiJoinOperator(App.model.getAllTableList(),tables,finalResidualCondition, ufVisitor.getUf());
+						root = new LogicalProjectOperator(root, plainSelect);
+						if(plainSelect.getDistinct() != null){
+							root = new LogicalSortOperator(root, plainSelect);
+							root = new LogicalDuplicateEliminationOperator(root);
+						}else {
+							if(plainSelect.getOrderByElements()!=null) {
+								root = new LogicalSortOperator(root, plainSelect);
+							}
+						}
+						
+						root.printTree(System.out, 0);
+						root.printTree(logicalPlanStream, 0);
+						logicalPlanStream.close();
+						
 						LogicalProjectOperator logicalProjectOperator = new LogicalProjectOperator(leftLogicalOp,plainSelect);
 						Operator operator = null;
 						LogicalOperator logicalOperator = logicalProjectOperator;

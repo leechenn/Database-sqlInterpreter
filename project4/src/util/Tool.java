@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import entity.Tuple;
 import handler.App;
 import net.sf.jsqlparser.expression.BinaryExpression;
@@ -20,6 +21,7 @@ import net.sf.jsqlparser.expression.operators.relational.GreaterThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.MinorThan;
 import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
 
 /**
  * @author Chen Li, QinXuan Pian
@@ -84,6 +86,30 @@ public class Tool {
 
 		}
 		tw.close();
+	}
+	public static Expression createCondition(String tab, String col, 
+			int val, boolean isEq, boolean isGE) {
+		Table t = new Table(null, tab);
+		Column c = new Column(t, col);
+		LongValue v = new LongValue(String.valueOf(val));
+		
+		if (isEq)
+			return new EqualsTo(c, v);
+		if (isGE)
+			return new GreaterThanEquals(c, v);
+		return new MinorThanEquals(c, v);
+	}
+	
+	public static Expression genAnds(List<Expression> exps) {
+		if (exps.isEmpty()) return null;
+		Expression ret = exps.get(0);
+		for (int i = 1; i < exps.size(); i++) {
+			if (exps.get(i) != null) {
+				ret = new AndExpression(ret, exps.get(i));
+			}
+		}
+			
+		return ret;
 	}
 
 	

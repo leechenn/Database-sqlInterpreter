@@ -1,5 +1,7 @@
 package logicaloperators;
 
+import java.io.PrintStream;
+
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import util.PhysicalPlanBuilder;
@@ -28,6 +30,20 @@ public class LogicalSelectOperator extends LogicalOperator{
 	public void accept(PhysicalPlanBuilder ppb) {
 
 		ppb.visit(this);
+	}
+
+	@Override
+	public String printLogicalTree() {
+		// TODO Auto-generated method stub
+		return String.format("Select[%s]", 
+				((expr == null) ? "null" : expr.toString()));
+
+	}
+	@Override
+	public void printTree(PrintStream ps, int lv) {
+		printIndent(ps, lv);
+		ps.println(printLogicalTree());
+		child.printTree(ps, lv + 1);
 	}
 
 }

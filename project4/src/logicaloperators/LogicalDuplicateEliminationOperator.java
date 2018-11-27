@@ -1,5 +1,7 @@
 package logicaloperators;
 
+import java.io.PrintStream;
+
 import util.PhysicalPlanBuilder;
 
 public class LogicalDuplicateEliminationOperator extends LogicalOperator {
@@ -17,5 +19,16 @@ public class LogicalDuplicateEliminationOperator extends LogicalOperator {
 	}
 	public LogicalOperator getChild() {
 		return child;
+	}
+	@Override
+	public String printLogicalTree() {
+		// TODO Auto-generated method stub
+		return "DupElim";
+	}
+	@Override
+	public void printTree(PrintStream ps, int lv) {
+		printIndent(ps, lv);
+		ps.println(printLogicalTree());
+		child.printTree(ps, lv + 1);
 	}
 }

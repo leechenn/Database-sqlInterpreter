@@ -6,6 +6,7 @@ import java.util.List;
 import handler.App;
 import logicaloperators.LogicalDuplicateEliminationOperator;
 import logicaloperators.LogicalJoinOperator;
+import logicaloperators.LogicalMultiJoinOperator;
 import logicaloperators.LogicalProjectOperator;
 import logicaloperators.LogicalScanOperator;
 import logicaloperators.LogicalSelectOperator;
@@ -198,6 +199,10 @@ public class PhysicalPlanBuilder {
 		Operator left;
 		Operator right;
 
+	}
+	public void visit(LogicalMultiJoinOperator logicalMultiJoinOperator) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
