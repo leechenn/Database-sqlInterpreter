@@ -52,6 +52,36 @@ public IndexScanOperator(PlainSelect plainSelect ,String table, String indexKey,
 	}
 	
 }
+public IndexScanOperator(PlainSelect plainSelect ,String table, String indexKey, Integer lowKey, Integer highKey, boolean isClustered, int joinedTableIndex) {
+	// TODO Auto-generated constructor stub
+	tableScanned = null;
+	tableScanned = plainSelect.getJoins().get(joinedTableIndex).toString();
+	String[] strs = tableScanned.split("\\s+");//if there is aliases
+	tableScanned = strs[0];
+	String aliasName = strs[strs.length-1];
+	if(strs.length!=1) {
+	App.model.setAliaMap(strs);
+	App.model.setCurSchema(aliasName);
+	}
+	else {
+		App.model.iniCurSchema(tableScanned);
+	}
+	curSchema = App.model.getCurSchema();
+	System.out.println("table-----"+table+"-----curSchema:"+curSchema);
+	this.lowKey = lowKey;
+	this.highKey = highKey;
+	this.isClustered = isClustered;
+	this.table = table;
+	this.indexKey = indexKey;
+    File indexFile = new File(App.model.getIndexDir()+"/"+this.table+"."+this.indexKey);
+	this.td = new TreeDeserializer(indexFile,lowKey,highKey);
+	this.tr = new TupleReader(table);
+	td.findStartLeaf();
+	this.rid = td.getNextRid();
+	if(rid!=null&&isClustered) {
+		tr.findFilePosition(rid.getPageId(), rid.getTupleId());
+	}
+}
 
 
 
@@ -65,6 +95,7 @@ public Tuple getNextTuple() {
 	return tuple;
 	}else {
 		if(!isClustered) {
+//			System.out.println("noCluster");
 			tr.findFilePosition(rid.getPageId(), rid.getTupleId());
 			tuple = tr.readNext();
 		}else {

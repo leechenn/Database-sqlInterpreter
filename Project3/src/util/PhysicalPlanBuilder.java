@@ -62,7 +62,7 @@ public class PhysicalPlanBuilder {
 						if(Integer.valueOf(App.model.getIndexInfoMap().get(tableName)[2])==1) {
 							isClustered = true;
 						}
-						IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered);
+						IndexScanOperator indexScanOperator = new IndexScanOperator(logicalSelectOperator.plainSelect, tableName, App.model.getIndexInfoMap().get(tableName)[1], tool.getLowKey(), tool.getHighKey(),isClustered,logicalScanOperator.joinedTableIndex);
 						op = new SelectOperator(indexScanOperator,logicalSelectOperator.plainSelect,tool.getOtherExp());
 					}else {
 						logicalSelectOperator.getChild().accept(this);
