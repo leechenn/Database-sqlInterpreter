@@ -20,7 +20,7 @@ Performance benchmarking is done for different join and sort algorithm
 
  ##  Performance benchmarking
 [join benchmarking](Project2/benchmarking/benchmarking.pdf)<br/>
-[clusted vs unclusted benchmarking](Project3/benchmarking/Experiment.pdf)<br/>
+[clustered vs unclustered benchmarking](Project3/benchmarking/Experiment.pdf)<br/>
  
 
  
