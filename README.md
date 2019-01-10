@@ -15,11 +15,11 @@ Performance benchmarking is done for different join and sort algorithm
 [project2](Project2/project2.pdf)<br/>
 [project3](Project3/project3.pdf)<br/>
 [project4](project4/project4.pdf)<br/>
-[project5](Project5/project5.pdf)<br/>
+[project5](project5/project5.pdf)<br/>
 
  ##  Performance benchmarking
- ![](Project2/benchmarking/benchmarking.pdf)<br/>
- ![](Project3/benchmarking/Experiment.pdf)<br/>
+ [](Project2/benchmarking/benchmarking.pdf)<br/>
+ [](Project3/benchmarking/Experiment.pdf)<br/>
  
 
  
